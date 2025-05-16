@@ -1,0 +1,159 @@
+.customization {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .product-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .main-content {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .sidebar {
+    width: 280px;
+    background-color:rgb(99, 99, 99);
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-shrink: 0;
+    height: fit-content;
+  }
+  
+  .sidebar-section {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+  }
+  
+  .sidebar-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+  
+  .sidebar-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  
+  .sidebar-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .sidebar-button {
+    padding: 8px 12px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+  }
+  
+  .sidebar-button.small {
+    padding: 5px 8px;
+    font-size: 12px;
+  }
+  
+  .sidebar-button:hover {
+    background-color: #357ae8;
+  }
+  
+  .sidebar-button.delete {
+    background-color: #e74c3c;
+  }
+  
+  .sidebar-button.delete:hover {
+    background-color: #c0392b;
+  }
+  
+  .sidebar-item {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar-item label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .sidebar-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: white;
+  }
+  
+  .design-area {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .property-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+  }
+  
+  .property-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .property-group input[type="text"],
+  .property-group input[type="number"],
+  .property-group select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+  
+  .property-group input[type="range"] {
+    margin-bottom: 5px;
+  }
+  
+  .position-inputs {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .position-inputs div {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .position-inputs input {
+    width: 60px;
+  }
+  
+  .z-index-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .z-index-controls span {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+  }
