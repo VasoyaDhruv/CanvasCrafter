@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useProductContext } from '../context/ProductContext_Temp';
+import { useProductContext } from '../context/ProductContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();

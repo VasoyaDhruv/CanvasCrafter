@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useRef, useEffect, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import { useProductContext } from './ProductContext_Temp';
+import { useProductContext } from './ProductContext';
 
 const CanvasContext = createContext();
 
