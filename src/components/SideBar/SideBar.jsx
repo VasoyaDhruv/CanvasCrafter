@@ -226,7 +226,7 @@ const SideBar = () => {
                       onChange={(e) => updateElement('opacity', parseFloat(e.target.value))}
                       className="w-full"
                     />
-                    <span className="text-xs text-gray-600">{Math.round(elements[selectedElement].opacity * 100)}%</span>
+                    <span className="text-xs text-gray-400">{Math.round(elements[selectedElement].opacity * 100)}%</span>
                   </div>
 
                   <div>
@@ -235,7 +235,7 @@ const SideBar = () => {
                       type="number"
                       value={Math.round(elements[selectedElement].width)}
                       onChange={(e) => updateElement('width', parseInt(e.target.value) || 5)}
-                      className="w-full px-2 py-1 border rounded text-black"
+                      className="w-full px-2 py-1 border rounded text-white"
                     />
                   </div>
 
@@ -245,7 +245,7 @@ const SideBar = () => {
                       type="number"
                       value={Math.round(elements[selectedElement].height)}
                       onChange={(e) => updateElement('height', parseInt(e.target.value) || 5)}
-                      className="w-full px-2 py-1 border rounded text-black"
+                      className="w-full px-2 py-1 border rounded text-white"
                     />
                   </div>
                 </>
