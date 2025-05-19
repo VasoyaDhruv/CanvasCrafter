@@ -1,13 +1,18 @@
-// context/CanvasContext.js
 import { createContext, useContext, useState, useRef, useEffect, useMemo } from 'react';
+import useProducts from '../hooks/useProducts';
+import { useParams } from 'react-router-dom';
 
 const CanvasContext = createContext();
 
-export const CanvasProvider = ({ children, product }) => {
+export const CanvasProvider = ({ children }) => {
   const [elements, setElements] = useState([]);
   const [selectedElement, setSelectedElement] = useState(null);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [imageFitMode, setImageFitMode] = useState('contain');
+    const { id } = useParams();
+    const { products } = useProducts();
+  
+  const product = products.find(item => item.id === parseInt(id)) || products[0];
 
   console.log("elements",elements)
 
@@ -91,6 +96,7 @@ export const CanvasProvider = ({ children, product }) => {
     moveElementZIndex,
     stageRef,
     transformerRef,
+    products,
     product
   }), [
     elements,
@@ -106,6 +112,7 @@ export const CanvasProvider = ({ children, product }) => {
     transformerRef,
     setElements,
     setSelectedElement,
+    products,
     product
   ]);
 
