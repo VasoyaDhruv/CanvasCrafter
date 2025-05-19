@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useProducts from '../hooks/useProducts';
+import { useProductContext } from '../Context/ProductContext';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { products, loading, error } = useProducts();
+   const { products, loading, error } = useProductContext();
 
   const handleImageClick = (image) => {
     navigate(`/customize/${image.id}`, { state: { image } });

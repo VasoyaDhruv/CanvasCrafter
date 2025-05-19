@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useRef, useEffect, useMemo } from 'react';
-import useProducts from '../hooks/useProducts';
 import { useParams } from 'react-router-dom';
+import { useProductContext } from './ProductContext';
 
 const CanvasContext = createContext();
 
@@ -10,11 +10,9 @@ export const CanvasProvider = ({ children }) => {
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [imageFitMode, setImageFitMode] = useState('contain');
     const { id } = useParams();
-    const { products } = useProducts();
+     const { products} = useProductContext();
   
   const product = products.find(item => item.id === parseInt(id)) || products[0];
-
-  console.log("elements",elements)
 
   const stageRef = useRef(null);
   const transformerRef = useRef(null);
