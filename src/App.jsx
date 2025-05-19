@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import Customization from './components/Customization';
-import { CanvasProvider } from './context/CanvasContext';
+import { CanvasProvider } from './Context/CanvasContext';
 
 function App() {
   return (

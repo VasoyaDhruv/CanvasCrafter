@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Stage, Layer, Text, Image, Transformer, Group } from 'react-konva';
 
 import './Customization.css';
-import { useCanvas } from '../context/CanvasContext';
+import { useCanvas } from '../Context/CanvasContext';
 import SideBar from './SideBar/SideBar';
 
 const Customization = () => {

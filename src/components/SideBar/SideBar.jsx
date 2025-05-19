@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useCanvas } from '../../context/CanvasContext';
+import { useCanvas } from '../../Context/CanvasContext';
 
 const SideBar = () => {
   const {
