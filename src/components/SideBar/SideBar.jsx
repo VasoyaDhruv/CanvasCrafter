@@ -204,11 +204,6 @@ const SideBar = () => {
                       className="w-full h-10 "
                     />
                   </div>
-                  <div>
-                    <button
-                      onClick={() => deleteElement()}
-                      className='bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded transition'>Delete</button>
-                  </div>
                 </>
               )}
 
@@ -250,6 +245,11 @@ const SideBar = () => {
                   </div>
                 </>
               )}
+                                <div>
+                    <button
+                      onClick={() => deleteElement()}
+                      className='bg-red-700 hover:bg-red-900 text-white font-bold py-2 px-4 rounded transition'>Delete</button>
+                  </div>
               {/* Z-Index Controls */}
               <div className="space-y-2">
                 <label className="block text-gray-400">Z-Index</label>
