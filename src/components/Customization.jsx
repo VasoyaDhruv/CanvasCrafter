@@ -4,6 +4,7 @@ import { Stage, Layer, Text, Image, Transformer, Group } from 'react-konva';
 import './Customization.css';
 import { useCanvas } from '../Context/CanvasContext';
 import SideBar from './SideBar/SideBar';
+import Toolbar from './SideBar/Toolbar';
 
 const Customization = () => {
   const {
@@ -15,21 +16,21 @@ const Customization = () => {
     imageFitMode,
     stageRef,
     transformerRef,
-    product
+    product,
+    updateElement
   } = useCanvas();
 
   const canvasContainerRef = useRef(null);
-  const sideBarRef = useRef(null);
+  const toolbarRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Only unselect if the click is outside both the canvas and the sidebar
       const isClickInsideCanvas = canvasContainerRef.current &&
         canvasContainerRef.current.contains(event.target);
-      const isClickInsideSidebar = sideBarRef.current &&
-        sideBarRef.current.contains(event.target);
+      const isClickInsideToolbar = toolbarRef.current &&
+        toolbarRef.current.contains(event.target);
 
-      if (!isClickInsideCanvas && !isClickInsideSidebar) {
+      if (!isClickInsideCanvas && !isClickInsideToolbar) {
         setSelectedElement(null);
       }
     };
@@ -113,44 +114,6 @@ const Customization = () => {
       };
     }
   };
-  const handleSave = () => {
-    const customizationData = {
-      product: product,
-      elements: elements,
-      backgroundSettings: {
-        imageFitMode: imageFitMode
-      },
-      customizationDate: new Date().toISOString(),
-    };
-
-    console.log("Saved design:", customizationData);
-    alert('Design saved successfully!');
-  };
-
-  const handleExport = () => {
-    if (stageRef.current) {
-      const prevSelectedElement = selectedElement;
-      setSelectedElement(null);
-
-      setTimeout(() => {
-        const dataURL = stageRef.current.toDataURL({
-          pixelRatio: 2,
-          mimeType: 'image/png'
-        });
-
-        const link = document.createElement('a');
-        link.download = `${product?.name || 'customized'}-design.png`;
-        link.href = dataURL;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        if (prevSelectedElement !== null) {
-          setSelectedElement(prevSelectedElement);
-        }
-      }, 100);
-    }
-  };
   const bgImageProps = getBackgroundImageProps();
 
   const sortedElements = [...elements].sort((a, b) => {
@@ -160,31 +123,15 @@ const Customization = () => {
   });
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden w-screen">
-      <div ref={sideBarRef}>
         <SideBar />
-      </div>
       {/* Design canvas area */}
-      <div className="flex-1 overflow-auto bg-gradient-to-br from-gray-100 to-gray-200 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">Product Customization</h1>
-            <div className="flex gap-2">
-              <button
-                onClick={handleSave}
-                className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
-              >
-                Save
-              </button>
-              <button
-                onClick={handleExport}
-                className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors"
-              >
-                Export
-              </button>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-xl p-4 flex justify-center border border-gray-200" ref={canvasContainerRef}>
+      <div className="flex-1 overflow-auto bg-gradient-to-br from-gray-100 to-gray-200">
+        <div ref={toolbarRef}>
+          <Toolbar />
+        </div>
 
+        <div className="max-w-4xl mx-auto">
+          <div className="rounded-lg shadow-xl  p-4 flex justify-center border border-gray-200" ref={canvasContainerRef}>
             <Stage
               width={bgImageProps.width}
               height={bgImageProps.height}
@@ -220,6 +167,7 @@ const Customization = () => {
                           width={element.width}
                           height={element.height}
                           rotation={element.rotation}
+                          textDecoration={element.textDecoration}
                           draggable={true}
                           onDragEnd={(e) => {
                             const newElements = [...elements];
@@ -231,6 +179,7 @@ const Customization = () => {
                                 y: e.target.y()
                               };
                               setElements(newElements);
+                              setSelectedElement(newElements)
                             }
                           }}
                           onClick={() => {
