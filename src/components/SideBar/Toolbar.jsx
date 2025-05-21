@@ -32,61 +32,15 @@ const fontStyles = [
 const Toolbar = () => {
   const {
     elements,
-    setElements,
     selectedElement,
     setSelectedElement,
     deleteElement,
     moveElementZIndex,
     updateElement,
+    stageRef,
+    product,
+    imageFitMode
   } = useCanvas();
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const imageURL = URL.createObjectURL(file);
-      const img = new window.Image();
-      img.src = imageURL;
-      img.onload = () => {
-        const maxWidth = 300;
-        const maxHeight = 300;
-        let newWidth = img.width;
-        let newHeight = img.height;
-
-        if (newWidth > maxWidth) {
-          const ratio = maxWidth / newWidth;
-          newWidth = maxWidth;
-          newHeight = newHeight * ratio;
-        }
-
-        if (newHeight > maxHeight) {
-          const ratio = maxHeight / newHeight;
-          newHeight = maxHeight;
-          newWidth = newWidth * ratio;
-        }
-
-        const newImage = {
-          id: `image-${Date.now()}`,
-          type: 'image',
-          src: imageURL,
-          x: 100,
-          y: 100,
-          width: newWidth,
-          height: newHeight,
-          draggable: true,
-          rotation: 0,
-          opacity: 1,
-          imageElement: img,
-          zIndex: elements.length + 1
-        };
-
-        setElements([...elements, newImage]);
-        setSelectedElement(elements.length);
-      };
-    }
-  };
-
 
   const handleSave = () => {
     const customizationData = {
