@@ -5,28 +5,25 @@ import { MdFormatItalic, MdFormatBold, MdDeleteOutline } from 'react-icons/md';
 
 const styleOptions = [
   {
-    key: 'fontStyle',
+    key: 'fontStyle-bold',
+    prop: 'fontStyle',
     value: 'bold',
     icon: <FaBold />,
   },
   {
-    key: 'fontStyle',
+    key: 'fontStyle-italic',
+    prop: 'fontStyle',
     value: 'italic',
     icon: <FaItalic />,
   },
   {
-    key: 'textDecoration',
+    key: 'textDecoration-underline',
+    prop: 'textDecoration',
     value: 'underline',
     icon: <FaUnderline />,
   },
 ];
 
-const fontStyles = [
-  { label: 'Bold', value: 'bold', icon: <FaBold /> },
-  { label: 'Italic', value: 'italic', icon: <FaItalic /> },
-  { label: 'Bold Italic', value: 'bold italic', icon: <><FaBold /><FaItalic /></> },
-
-];
 
 
 const Toolbar = () => {
@@ -125,20 +122,19 @@ const Toolbar = () => {
               </div>
 
               <div className="flex gap-2">
-                {styleOptions.map(({ key, value, icon }) => {
-                  const isActive = elements[selectedElement]?.[key] === value;
-
+                {styleOptions.map(({ key, prop, value, icon }) => {
+                  const isActive = elements[selectedElement]?.[prop] === value;
                   return (
                     <button
                       key={key}
                       onClick={() =>
                         updateElement(
-                          key,
-                          isActive ? (key === 'textDecoration' ? 'none' : 'normal') : value
+                          prop,
+                          isActive ? (prop === 'textDecoration' ? 'none' : 'normal') : value
                         )
                       }
                       className={`p-2 rounded border transition 
-                         ${isActive
+         ${isActive
                           ? 'bg-indigo-600 text-white border-indigo-700'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'}`}
                     >
@@ -192,14 +188,14 @@ const Toolbar = () => {
             </button>
           </div>
           {/* Z-Index Controls */}
-                        <div>
-                <input
-                  type="color"
-                  value={elements[selectedElement].color}
-                  onChange={(e) => updateElement('color', e.target.value)}
-                  className="w-full h-10 px-1"
-                />
-              </div>
+          <div>
+            <input
+              type="color"
+              value={elements[selectedElement].color}
+              onChange={(e) => updateElement('color', e.target.value)}
+              className="w-full h-10 px-1"
+            />
+          </div>
           <div className=" flex items-center">
             <div className="flex items-center gap-2">
               <button
