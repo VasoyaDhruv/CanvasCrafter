@@ -89,21 +89,12 @@ const Toolbar = () => {
             <div className='flex gap-2 items-center'>
               <div>
                 <input
-                  type="text"
-                  value={elements[selectedElement].text}
-                  onChange={(e) => updateElement('text', e.target.value)}
-                  className="w-full px-3 py-1 border rounded focus:outline-none focus:ring-2 focus:ring-blue-300 text-white"
-                />
-              </div>
-
-              <div>
-                <input
                   type="number"
                   min="8"
                   max="72"
                   value={elements[selectedElement].fontSize}
                   onChange={(e) => updateElement('fontSize', parseInt(e.target.value))}
-                  className="w-full px-3 py-1 border rounded text-white"
+                  className="w-full px-3 py-1 rounded text-white bg-gray-700"
                 />
               </div>
 
@@ -111,7 +102,7 @@ const Toolbar = () => {
                 <select
                   value={elements[selectedElement].fontFamily}
                   onChange={(e) => updateElement('fontFamily', e.target.value)}
-                  className="w-full px-3 py-1 border rounded text-white"
+                  className="w-full px-3 py-1 rounded text-white bg-gray-700"
                 >
                   <option value="Arial">Arial</option>
                   <option value="Verdana">Verdana</option>
@@ -119,6 +110,16 @@ const Toolbar = () => {
                   <option value="Courier New">Courier New</option>
                   <option value="Georgia">Georgia</option>
                 </select>
+              </div>
+
+              <div>
+                <input
+                  type="color"
+                  value={elements[selectedElement].color}
+                  onChange={(e) => updateElement('color', e.target.value)}
+                  className="w-8 h-9 p-0 border-0 bg-transparent flex items-center"
+                  title="Text Color"
+                />
               </div>
 
               <div className="flex gap-2">
@@ -134,7 +135,7 @@ const Toolbar = () => {
                         )
                       }
                       className={`p-2 rounded border transition 
-         ${isActive
+                        ${isActive
                           ? 'bg-indigo-600 text-white border-indigo-700'
                           : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border-gray-300'}`}
                     >
@@ -149,7 +150,7 @@ const Toolbar = () => {
           {/* Image Element Options */}
           {elements[selectedElement].type === 'image' && (
             <div className='flex  items-center gap-2'>
-              <div className='flex gap-1 items-center'>
+              <div className='flex gap-1 items-center '>
                 <input
                   type="range"
                   min="0.1"
@@ -167,7 +168,7 @@ const Toolbar = () => {
                   type="number"
                   value={Math.round(elements[selectedElement].width)}
                   onChange={(e) => updateElement('width', parseInt(e.target.value) || 5)}
-                  className="w-full px-2 py-1 border rounded text-white"
+                  className="w-full px-2 py-1 rounded text-white bg-gray-700"
                 />
               </div>
 
@@ -176,7 +177,7 @@ const Toolbar = () => {
                   type="number"
                   value={Math.round(elements[selectedElement].height)}
                   onChange={(e) => updateElement('height', parseInt(e.target.value) || 5)}
-                  className="w-full px-2 py-1 border rounded text-white"
+                  className="w-full px-2 py-1 rounded text-white bg-gray-700"
                 />
               </div>
             </div>
@@ -215,19 +216,18 @@ const Toolbar = () => {
             </div>
           </div>
 
-
         </div>
       )}
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+          className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-[14px]"
         >
           Save
         </button>
         <button
           onClick={handleExport}
-          className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors"
+          className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors text-[14px]"
         >
           Export
         </button>
