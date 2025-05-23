@@ -259,13 +259,13 @@ const Toolbar = () => {
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-[14px]"
+          className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-[14px] cursor-pointer"
         >
           Save
         </button>
         <button
           onClick={handleExport}
-          className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors text-[14px]"
+          className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors text-[14px] cursor-pointer"
         >
           Export
         </button>
