@@ -1,0 +1,52 @@
+[
+  {
+    "id": 101,
+    "title": "Custom T-Shirt - Design Your Own",
+    "price": 14.99,
+    "description": "Create your own t-shirt with custom text, images, and colors. High-quality cotton, available in multiple sizes and colors.",
+    "category": "custom t-shirts",
+    "image": "https://ik.imagekit.io/qak2yjza1/white-tshirt.webp?updatedAt=1747978421741",
+    "custom_options": {
+      "colors": [
+        "white",
+        "#a5492b",
+        "#b4b6b7",
+        "#7b5f44"
+      ],
+      "color_images": {
+        "white": "https://ik.imagekit.io/qak2yjza1/white-tshirt.webp?updatedAt=1747978421741",
+        "#a5492b": "https://ik.imagekit.io/qak2yjza1/orange.webp?updatedAt=1747978421970",
+        "#b4b6b7": "https://ik.imagekit.io/qak2yjza1/grey.webp?updatedAt=1747978421999",
+        "#7b5f44": "https://ik.imagekit.io/qak2yjza1/brown.webp?updatedAt=1747978422538"
+      },
+      "sizes": [
+        "S",
+        "M",
+        "L",
+        "XL",
+        "XXL"
+      ],
+      "font_styles": [
+        "Arial",
+        "Roboto",
+        "Comic Sans"
+      ]
+    },
+    "rating": {
+      "rate": 4.6,
+      "count": 232
+    }
+  },
+  {
+    "id": 102,
+    "title": "Classic Cap",
+    "price": 9.99,
+    "description": "Comfortable and stylish classic cap. Perfect for everyday wear and outdoor activities.",
+    "category": "caps",
+    "image": "https://ik.imagekit.io/qak2yjza1/cap-Photoroom.png?updatedAt=1747982261050",
+    "rating": {
+      "rate": 4.3,
+      "count": 87
+    }
+  }
+]

@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Stage, Layer, Text, Image, Transformer, Group } from 'react-konva';
 
 import './Customization.css';
-import { useCanvas } from '../context/CanvasContext';
+import { useCanvas } from '../Context/CanvasContext';
 import SideBar from './SideBar/SideBar';
+import Toolbar from './SideBar/Toolbar';
 
 const Customization = () => {
   const {
@@ -12,25 +13,44 @@ const Customization = () => {
     selectedElement,
     setSelectedElement,
     backgroundImage,
-    imageFitMode,
     stageRef,
     transformerRef,
-    product
   } = useCanvas();
 
   const canvasContainerRef = useRef(null);
-  const sideBarRef = useRef(null);
+  const toolbarRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  // State for text editing
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingText, setEditingText] = useState("");
+  const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
+  const [textProps, setTextProps] = useState({});
+
+   const [textWidth, setTextWidth] = useState(200);
+  const textRef = useRef();
+  const trRef = useRef();
+  useEffect(() => {
+    if (trRef.current && textRef.current) {
+      trRef.current.nodes([textRef.current]);
+      trRef.current.getLayer().batchDraw();
+    }
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Only unselect if the click is outside both the canvas and the sidebar
       const isClickInsideCanvas = canvasContainerRef.current &&
         canvasContainerRef.current.contains(event.target);
-      const isClickInsideSidebar = sideBarRef.current &&
-        sideBarRef.current.contains(event.target);
+      const isClickInsideToolbar = toolbarRef.current &&
+        toolbarRef.current.contains(event.target);
+      const isClickInsideTextarea = textareaRef.current &&
+        textareaRef.current.contains(event.target);
 
-      if (!isClickInsideCanvas && !isClickInsideSidebar) {
+      if (!isClickInsideCanvas && !isClickInsideToolbar && !isClickInsideTextarea) {
         setSelectedElement(null);
+        if (isEditing) {
+          completeTextEditing();
+        }
       }
     };
 
@@ -38,15 +58,87 @@ const Customization = () => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [setSelectedElement]);
+  }, [setSelectedElement, isEditing]);
 
-
+  // Handle stage click
   const handleStageClick = (e) => {
     if (e.target === e.target.getStage()) {
       setSelectedElement(null);
+      if (isEditing) {
+        completeTextEditing();
+      }
     }
   };
 
+  const startTextEditing = (element) => {
+    if (element.type !== 'text') return;
+
+    const stage = stageRef.current;
+    const stageBox = stage.container().getBoundingClientRect();
+
+    const textNode = stage.findOne(`#${element.id}`);
+    const absPos = stage.findOne(`#${element.id}`).absolutePosition();
+
+    const textPositionX = stageBox.left + absPos.x;
+    const textPositionY = stageBox.top + absPos.y;
+
+     const actualHeight = textNode.height() * textNode.scaleY();
+
+    setTextPosition({
+      x: textPositionX,
+      y: textPositionY
+    });
+
+    setTextProps({
+      width: element.width,
+      height: actualHeight,
+      fontSize: element.fontSize,
+      fontFamily: element.fontFamily,
+      fontStyle: element.fontStyle,
+      fill: element.color,
+      rotation: element.rotation,
+      textDecoration: element.textDecoration
+    });
+
+    setEditingText(element.text);
+    setIsEditing(true);
+
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.focus();
+        textareaRef.current.select();
+      }
+    }, 10);
+  };
+
+  const completeTextEditing = () => {
+    if (!isEditing || selectedElement === null) return;
+
+    const newElements = [...elements];
+    const elementIndex = selectedElement;
+
+    if (elementIndex !== -1 && newElements[elementIndex]) {
+      newElements[elementIndex] = {
+        ...newElements[elementIndex],
+        text: editingText
+      };
+      setElements(newElements);
+    }
+
+    setIsEditing(false);
+  };
+
+  // Function to handle keyboard events in the textarea
+  const handleTextareaKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      completeTextEditing();
+    }
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      setIsEditing(false);
+    }
+  };
 
   const handleTransformEnd = (e) => {
     if (selectedElement === null) return;
@@ -59,21 +151,70 @@ const Customization = () => {
     node.scaleY(1);
 
     const newElements = [...elements];
-    newElements[selectedElement] = {
-      ...newElements[selectedElement],
-      x: node.x(),
-      y: node.y(),
-      rotation: node.rotation(),
-      width: Math.max(5, node.width() * scaleX),
-      height: Math.max(5, node.height() * scaleY)
-    };
+    const currentElement = newElements[selectedElement];
+
+    // For images, maintain aspect ratio
+    if (currentElement.type === 'image') {
+      const originalAspectRatio = currentElement.width / currentElement.height;
+      let newWidth = Math.max(5, node.width() * scaleX);
+      let newHeight = Math.max(5, node.height() * scaleY);
+
+      // Calculate new dimensions while maintaining aspect ratio
+      // Use the larger scale to maintain the aspect ratio
+      const effectiveScale = Math.max(scaleX, scaleY);
+      newWidth = Math.max(5, node.width() * effectiveScale);
+      newHeight = newWidth / originalAspectRatio;
+
+      newElements[selectedElement] = {
+        ...currentElement,
+        x: node.x(),
+        y: node.y(),
+        rotation: node.rotation(),
+        width: newWidth,
+        height: newHeight
+      };
+    } else {
+      // For text elements, allow free transformation
+      newElements[selectedElement] = {
+        ...currentElement,
+        x: node.x(),
+        y: node.y(),
+        rotation: node.rotation(),
+        width: Math.max(5, node.width() * scaleX),
+      };
+    }
 
     setElements(newElements);
   };
 
+  // Custom bound box function to maintain aspect ratio for images
+  const boundBoxFunc = (oldBox, newBox) => {
+    if (newBox.width < 5 || newBox.height < 5) {
+      return oldBox;
+    }
+
+    // Check if the selected element is an image
+    if (selectedElement !== null && elements[selectedElement] && elements[selectedElement].type === 'image') {
+      const originalAspectRatio = elements[selectedElement].width / elements[selectedElement].height;
+      
+      // Calculate new dimensions maintaining aspect ratio
+      const widthScale = newBox.width / oldBox.width;
+      const heightScale = newBox.height / oldBox.height;
+      const scale = Math.max(widthScale, heightScale);
+      
+      return {
+        ...newBox,
+        width: oldBox.width * scale,
+        height: (oldBox.width * scale) / originalAspectRatio
+      };
+    }
+
+    return newBox;
+  };
+
   useEffect(() => {
     if (transformerRef.current) {
-      if (selectedElement !== null && elements[selectedElement]) {
+      if (selectedElement !== null && elements[selectedElement] && !isEditing) {
         const stage = stageRef.current;
         const node = stage.findOne(`#${elements[selectedElement].id}`);
 
@@ -86,7 +227,7 @@ const Customization = () => {
         transformerRef.current.getLayer()?.batchDraw();
       }
     }
-  }, [selectedElement, elements, transformerRef, stageRef]);
+  }, [selectedElement, elements, transformerRef, stageRef, isEditing]);
 
   const getBackgroundImageProps = () => {
     if (!backgroundImage) return {};
@@ -113,44 +254,6 @@ const Customization = () => {
       };
     }
   };
-  const handleSave = () => {
-    const customizationData = {
-      product: product,
-      elements: elements,
-      backgroundSettings: {
-        imageFitMode: imageFitMode
-      },
-      customizationDate: new Date().toISOString(),
-    };
-
-    console.log("Saved design:", customizationData);
-    alert('Design saved successfully!');
-  };
-
-  const handleExport = () => {
-    if (stageRef.current) {
-      const prevSelectedElement = selectedElement;
-      setSelectedElement(null);
-
-      setTimeout(() => {
-        const dataURL = stageRef.current.toDataURL({
-          pixelRatio: 2,
-          mimeType: 'image/png'
-        });
-
-        const link = document.createElement('a');
-        link.download = `${product?.name || 'customized'}-design.png`;
-        link.href = dataURL;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        if (prevSelectedElement !== null) {
-          setSelectedElement(prevSelectedElement);
-        }
-      }, 100);
-    }
-  };
   const bgImageProps = getBackgroundImageProps();
 
   const sortedElements = [...elements].sort((a, b) => {
@@ -158,33 +261,18 @@ const Customization = () => {
     const zIndexB = b.zIndex || 0;
     return zIndexA - zIndexB;
   });
+
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden w-screen">
-      <div ref={sideBarRef}>
-        <SideBar />
-      </div>
+      <SideBar />
       {/* Design canvas area */}
-      <div className="flex-1 overflow-auto bg-gradient-to-br from-gray-100 to-gray-200 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-800">Product Customization</h1>
-            <div className="flex gap-2">
-              <button
-                onClick={handleSave}
-                className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
-              >
-                Save
-              </button>
-              <button
-                onClick={handleExport}
-                className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors"
-              >
-                Export
-              </button>
-            </div>
-          </div>
-          <div className="bg-white rounded-lg shadow-xl p-4 flex justify-center border border-gray-200" ref={canvasContainerRef}>
+      <div className="flex flex-col w-full overflow-auto bg-gradient-to-br from-gray-100 to-gray-200">
+        <div ref={toolbarRef}>
+          <Toolbar />
+        </div>
 
+        <div className="max-w-4xl mx-auto flex items-center h-full justify-center">
+          <div className="w-fit rounded-lg shadow-xl p-2 border border-gray-200 h-fit" ref={canvasContainerRef}>
             <Stage
               width={bgImageProps.width}
               height={bgImageProps.height}
@@ -207,20 +295,26 @@ const Customization = () => {
                   const originalIndex = elements.findIndex(e => e.id === element.id);
                   return (
                     <Group key={element.id}>
-                      {element.type === 'text' && (
+                      {element.type === 'text' && !isEditing && (
                         <Text
                           id={element.id}
                           text={element.text}
                           x={element.x}
                           y={element.y}
+                          ref={textRef}
                           fontSize={element.fontSize}
                           fontFamily={element.fontFamily}
                           fontStyle={element.fontStyle}
                           fill={element.color}
-                          width={element.width}
-                          height={element.height}
+                          width={textWidth}
                           rotation={element.rotation}
+                          textDecoration={element.textDecoration}
                           draggable={true}
+                          onTransform={() => {
+                              const node = textRef.current;
+                              setTextWidth(node.width() * node.scaleX());
+                              node.scaleX(1);
+                            }}
                           onDragEnd={(e) => {
                             const newElements = [...elements];
                             const elementIndex = newElements.findIndex(el => el.id === element.id);
@@ -234,10 +328,11 @@ const Customization = () => {
                             }
                           }}
                           onClick={() => {
-                            setSelectedElement(originalIndex);
-                          }}
-                          onDblClick={() => {
-                            setSelectedElement(originalIndex);
+                            if (selectedElement === originalIndex) {
+                              startTextEditing(element);
+                            } else {
+                              setSelectedElement(originalIndex);
+                            }
                           }}
                         />
                       )}
@@ -273,35 +368,58 @@ const Customization = () => {
                 })}
 
                 {/* Transformer for resizing/rotating elements */}
-                {selectedElement !== null && elements.length > 0 && elements[selectedElement] && (
+                {selectedElement !== null && elements.length > 0 && elements[selectedElement] && !isEditing && (
                   <Transformer
                     ref={transformerRef}
-                    boundBoxFunc={(oldBox, newBox) => {
-                      // Minimum size constraints
-                      if (newBox.width < 5 || newBox.height < 5) {
-                        return oldBox;
-                      }
-                      return newBox;
-                    }}
+                    boundBoxFunc={boundBoxFunc}
                     onTransformEnd={handleTransformEnd}
                     rotateEnabled={true}
-                    enabledAnchors={[
-                      'top-left', 'top-center', 'top-right',
-                      'middle-right', 'middle-left',
-                      'bottom-left', 'bottom-center', 'bottom-right'
-                    ]}
-                    keepRatio={false}
+                    enabledAnchors={
+                      elements[selectedElement].type === 'image' 
+                        ? ['top-left', 'top-right', 'bottom-left', 'bottom-right'] // Only corner anchors for images
+                        : ['middle-right', 'middle-left']
+                    }
+                    keepRatio={elements[selectedElement].type === 'image'} // Keep ratio for images only
                   />
                 )}
               </Layer>
             </Stage>
+            {/* Text editor overlay */}
+            {isEditing && selectedElement !== null && elements[selectedElement] && elements[selectedElement].type === 'text' && (
+              <textarea
+                ref={textareaRef}
+                value={editingText}
+                onChange={(e) => setEditingText(e.target.value)}
+                onKeyDown={handleTextareaKeyDown}
+                onBlur={completeTextEditing}
+                style={{
+                  position: 'absolute',
+                  top: `${textPosition.y}px`,
+                  left: `${textPosition.x}px`,
+                  width: `${textProps.width}px`,
+                  height: `${textProps.height}px`,
+                  // height: "fit-content",
+                  fontSize: `${textProps.fontSize}px`,
+                  fontFamily: textProps.fontFamily,
+                  fontStyle: textProps.fontStyle,
+                  color: textProps.fill,
+                  textDecoration: textProps.textDecoration,
+                  transform: `rotate(${textProps.rotation}deg)`,
+                  transformOrigin: 'top left',
+                  border: '1px dashed #00A3FF',
+                  outline: 'none',
+                  background: 'transparent',
+                  resize: 'none',
+                  zIndex: 1000,
+                  boxShadow: '0 0 0 1px #00A3FF',
+                  lineHeight:"0.8"
+                }}
+              />
+            )}
           </div>
         </div>
-
       </div>
-
     </div>
-
   );
 };
 

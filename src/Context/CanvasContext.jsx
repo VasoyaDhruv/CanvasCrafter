@@ -9,21 +9,28 @@ export const CanvasProvider = ({ children }) => {
   const [selectedElement, setSelectedElement] = useState(null);
   const [backgroundImage, setBackgroundImage] = useState(null);
   const [imageFitMode, setImageFitMode] = useState('contain');
-    const { id } = useParams();
-     const { products} = useProductContext();
-  
+  const { id } = useParams();
+  const { products } = useProductContext();
+
   const product = products.find(item => item.id === parseInt(id)) || products[0];
 
   const stageRef = useRef(null);
   const transformerRef = useRef(null);
 
-  useEffect(() => {
-    if (product?.image) {
-      const img = new window.Image();
-      img.crossOrigin = "anonymous";
-      img.src = product?.image;
-      img.onload = () => setBackgroundImage(img);
+  // Common function to set background image
+  const setBackground = (imageUrl) => {
+    if (!imageUrl) {
+      setBackgroundImage(null);
+      return;
     }
+    const img = new window.Image();
+    img.crossOrigin = "anonymous";
+    img.src = imageUrl;
+    img.onload = () => setBackgroundImage(img);
+  };
+
+  useEffect(() => {
+    setBackground(product?.image);
   }, [product]);
 
   const addTextElement = () => {
@@ -31,14 +38,13 @@ export const CanvasProvider = ({ children }) => {
       id: `text-${Date.now()}`,
       type: 'text',
       text: 'New Text',
-      x: 100,
-      y: 100,
+      x: 175,
+      y: 135,
       fontSize: 24,
       draggable: true,
       rotation: 0,
-      width: 200,
-      height: 50,
-      color: 'black',
+      width: 100,
+      color: '#000000',
       fontFamily: 'Arial',
       fontStyle: 'normal',
       zIndex: elements.length + 1,
@@ -95,7 +101,8 @@ export const CanvasProvider = ({ children }) => {
     stageRef,
     transformerRef,
     products,
-    product
+    product,
+    setBackground // Expose the new function
   }), [
     elements,
     selectedElement,
@@ -111,7 +118,8 @@ export const CanvasProvider = ({ children }) => {
     setElements,
     setSelectedElement,
     products,
-    product
+    product,
+    setBackground
   ]);
 
   return (
