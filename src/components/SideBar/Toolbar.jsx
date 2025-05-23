@@ -94,7 +94,7 @@ const Toolbar = () => {
       {/* Properties Panel */}
       {showColorPanel && (
         <div className="flex items-center gap-2 mr-4">
-          <span className="text-sm text-gray-300 mr-2">T-Shirt Color:</span>
+          <span className="text-sm text-gray-300 mr-2">Varient Color:</span>
           {product.custom_options.colors.map((color) => (
             <button
               key={color}
