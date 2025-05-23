@@ -117,7 +117,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className={`flex h-screen bg-gray-900 text-white transition-all duration-300 w-92 p-0`}>
+    <div className={`flex h-screen bg-gray-900 text-white transition-all duration-300 ${selectedTab ? "w-92" : "w-20"} p-0`}>
       <div className="space-y-3 mb-5 h-screen border-r-1 border-gray-700">
         <div className="flex flex-col">
           <button
