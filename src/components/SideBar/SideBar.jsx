@@ -77,7 +77,6 @@ const SideBar = () => {
         const res = await fetch(`https://api.unsplash.com/search/photos?page=${page}&per_page=20&query=${searchInput ?? "all"}&client_id=${UNSPLASH_KEY}`);
         if (!res.ok) throw new Error("Failed to fetch images");
         const data = await res.json();
-        console.log("data_img", data.results[0])
         setImages(data.results);
       } catch (err) {
         console.error("Error fetching Unsplash images:", err);
@@ -127,9 +126,10 @@ const SideBar = () => {
           <button
             onClick={() => {
               addTextElement();
-              setSelectedTab("text");
+              setSelectedTab((prev) => prev === "text" ? null : "text")
             }}
-            className="w-full h-20 flex flex-col items-center gap-1 justify-center py-2 px-4 bg-gray-800 hover:bg-gray-700 transition-colors border-b-1 border-gray-700 cursor-pointer"
+             className={`"w-full h-20 flex items-center flex-col gap-1 justify-center py-2 px-4 hover:bg-gray-700 transition-colors cursor-pointer
+                      ${selectedTab === "text" ? "bg-gray-700" : "bg-gray-800"}`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v18m3-6h6M3 17h12" />
@@ -137,7 +137,8 @@ const SideBar = () => {
             <span className='text-[14px]' >Text</span>
           </button>
           <button
-            className="w-full h-20 flex items-center flex-col gap-1 justify-center py-2 px-4 bg-gray-800 hover:bg-gray-700 transition-colors cursor-pointer"
+            className={`"w-full h-20 flex items-center flex-col gap-1 justify-center py-2 px-4 hover:bg-gray-700 transition-colors cursor-pointer
+                      ${selectedTab === "photo" ? "bg-gray-700" : "bg-gray-800"}`}
             onClick={() => setSelectedTab((prev) => prev === "photo" ? null : "photo")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

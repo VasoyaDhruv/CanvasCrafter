@@ -24,8 +24,6 @@ const styleOptions = [
   },
 ];
 
-
-
 const Toolbar = () => {
   const {
     elements,
@@ -36,8 +34,10 @@ const Toolbar = () => {
     updateElement,
     stageRef,
     product,
-    imageFitMode
+    imageFitMode,
+    setBackground
   } = useCanvas();
+  const [selectedColor, setSelectedColor] = useState(product?.custom_options?.colors[0]);
 
   const handleSave = () => {
     const customizationData = {
@@ -48,8 +48,7 @@ const Toolbar = () => {
       },
       customizationDate: new Date().toISOString(),
     };
-
-    console.log("Saved design:", customizationData);
+    localStorage.setItem('customizationData', JSON.stringify(customizationData));
     alert('Design saved successfully!');
   };
 
@@ -79,9 +78,46 @@ const Toolbar = () => {
   };
 
 
+  // Determine if we should justify-between:
+  const hasCustomColors = product?.custom_options?.colors?.length > 0;
+  const showColorPanel = selectedElement === null && hasCustomColors;
+
   return (
-    <div className={`flex w-full bg-gray-900 text-white transition-all duration-300 h-20 p-1 px-3 items-center ${selectedElement !== null && elements[selectedElement] ? 'justify-between' : 'justify-end'}`}>
+    <div
+      className={`flex w-full bg-gray-900 text-white transition-all duration-300 h-20 p-1 px-3 items-center ${(showColorPanel || (selectedElement !== null && elements[selectedElement]))
+          ? 'justify-between'
+          : 'justify-end'
+        }`}
+    >
       {/* Properties Panel */}
+      {showColorPanel && (
+        <div className="flex items-center gap-2 mr-4">
+          <span className="text-sm text-gray-300 mr-2">T-Shirt Color:</span>
+          {product.custom_options.colors.map((color) => (
+            <button
+              key={color}
+              style={{
+                backgroundColor: color,
+                border: selectedColor=== color
+                  ? '2px solid #4f46e5'
+                  : '2px solid transparent',
+              }}
+              className="w-7 h-7 rounded-full border-2 transition-all cursor-pointer shadow-2xl"
+              onClick={() => {
+                if (product?.custom_options?.color_images[color]) {
+                  setBackground(product?.custom_options?.color_images[color]);
+                  setSelectedColor(color);
+                }
+              }}
+              title={color}
+            >
+              {product.image?.includes(product?.custom_options?.color_images[color]) && (
+                <span className="text-white text-xs font-bold">&#10003;</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
       {selectedElement !== null && elements[selectedElement] && (
         <div className="flex items-center">
           {/* Text Element Options */}
@@ -233,7 +269,6 @@ const Toolbar = () => {
         </button>
       </div>
     </div>
-
   )
 }
 

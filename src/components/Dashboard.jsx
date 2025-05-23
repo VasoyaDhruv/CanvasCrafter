@@ -16,7 +16,7 @@ const Dashboard = () => {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-6xl mx-auto">
 
-      <h1 className="text-2xl font-bold text-center mb-6">Image Customization</h1>
+      <h1 className="text-2xl font-bold text-center mb-6">Product Customization</h1>
 
       {loading && <p className="text-center">Loading...</p>}
       {error && <p className="text-center text-red-500">Error loading products</p>}
