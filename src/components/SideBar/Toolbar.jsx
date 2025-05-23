@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useCanvas } from '../../Context/CanvasContext';
 import { FaItalic, FaBold, FaUnderline } from 'react-icons/fa';
-import { MdFormatItalic, MdFormatBold, MdDeleteOutline } from 'react-icons/md';
+import { MdDeleteOutline } from 'react-icons/md';
+import toast from 'react-hot-toast';
 
 const styleOptions = [
   {
@@ -49,7 +50,7 @@ const Toolbar = () => {
       customizationDate: new Date().toISOString(),
     };
     localStorage.setItem('customizationData', JSON.stringify(customizationData));
-    alert('Design saved successfully!');
+     toast.success('Design saved successfully!');
   };
 
   const handleExport = () => {
@@ -73,6 +74,7 @@ const Toolbar = () => {
         if (prevSelectedElement !== null) {
           setSelectedElement(prevSelectedElement);
         }
+        toast.success('Design exported successfully!');
       }, 100);
     }
   };
