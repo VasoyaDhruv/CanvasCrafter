@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { useCanvas } from '../../Context/CanvasContext';
 import { FaItalic, FaBold, FaUnderline } from 'react-icons/fa';
-import { MdFormatItalic, MdFormatBold, MdDeleteOutline } from 'react-icons/md';
+import { MdDeleteOutline } from 'react-icons/md';
+import toast from 'react-hot-toast';
 
 const styleOptions = [
   {
@@ -49,7 +50,7 @@ const Toolbar = () => {
       customizationDate: new Date().toISOString(),
     };
     localStorage.setItem('customizationData', JSON.stringify(customizationData));
-    alert('Design saved successfully!');
+     toast.success('Design saved successfully!');
   };
 
   const handleExport = () => {
@@ -73,6 +74,7 @@ const Toolbar = () => {
         if (prevSelectedElement !== null) {
           setSelectedElement(prevSelectedElement);
         }
+        toast.success('Design exported successfully!');
       }, 100);
     }
   };
@@ -92,7 +94,7 @@ const Toolbar = () => {
       {/* Properties Panel */}
       {showColorPanel && (
         <div className="flex items-center gap-2 mr-4">
-          <span className="text-sm text-gray-300 mr-2">T-Shirt Color:</span>
+          <span className="text-sm text-gray-300 mr-2">Varient Color:</span>
           {product.custom_options.colors.map((color) => (
             <button
               key={color}
@@ -257,13 +259,13 @@ const Toolbar = () => {
       <div className="flex gap-2">
         <button
           onClick={handleSave}
-          className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-[14px]"
+          className="py-2 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors text-[14px] cursor-pointer"
         >
           Save
         </button>
         <button
           onClick={handleExport}
-          className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors text-[14px]"
+          className="py-2 px-4 bg-gray-700 hover:bg-gray-800 text-white rounded-lg transition-colors text-[14px] cursor-pointer"
         >
           Export
         </button>

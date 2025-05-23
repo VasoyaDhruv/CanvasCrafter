@@ -150,7 +150,7 @@ const SideBar = () => {
       {
         selectedTab === "photo" && (
           <div className={`overflow-y-auto flex flex-col p-2 ${selectedTab === "photo" ? "w-92" : "w-0"}`}>
-            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px]'
+            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px] cursor-pointer'
               onClick={handleAddImage}
             >Select From Device</button>
             <div className="mb-2">
@@ -201,7 +201,7 @@ const SideBar = () => {
       {
         selectedTab === "text" && (
           <div className={`overflow-y-auto flex flex-col p-2 ${selectedTab === "text" ? "w-92" : "w-90"}`}>
-            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px]'
+            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px] cursor-pointer'
               onClick={() => addTextElement()}
             >Add New Text</button>
           </div>
