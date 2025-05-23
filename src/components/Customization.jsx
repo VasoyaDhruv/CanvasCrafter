@@ -27,6 +27,16 @@ const Customization = () => {
   const [textPosition, setTextPosition] = useState({ x: 0, y: 0 });
   const [textProps, setTextProps] = useState({});
 
+   const [textWidth, setTextWidth] = useState(200);
+  const textRef = useRef();
+  const trRef = useRef();
+  useEffect(() => {
+    if (trRef.current && textRef.current) {
+      trRef.current.nodes([textRef.current]);
+      trRef.current.getLayer().batchDraw();
+    }
+  }, []);
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       const isClickInsideCanvas = canvasContainerRef.current &&
@@ -66,10 +76,13 @@ const Customization = () => {
     const stage = stageRef.current;
     const stageBox = stage.container().getBoundingClientRect();
 
+    const textNode = stage.findOne(`#${element.id}`);
     const absPos = stage.findOne(`#${element.id}`).absolutePosition();
 
     const textPositionX = stageBox.left + absPos.x;
     const textPositionY = stageBox.top + absPos.y;
+
+     const actualHeight = textNode.height() * textNode.scaleY();
 
     setTextPosition({
       x: textPositionX,
@@ -78,7 +91,7 @@ const Customization = () => {
 
     setTextProps({
       width: element.width,
-      height: element.height,
+      height: actualHeight,
       fontSize: element.fontSize,
       fontFamily: element.fontFamily,
       fontStyle: element.fontStyle,
@@ -168,7 +181,6 @@ const Customization = () => {
         y: node.y(),
         rotation: node.rotation(),
         width: Math.max(5, node.width() * scaleX),
-        height: Math.max(5, node.height() * scaleY)
       };
     }
 
@@ -289,15 +301,20 @@ const Customization = () => {
                           text={element.text}
                           x={element.x}
                           y={element.y}
+                          ref={textRef}
                           fontSize={element.fontSize}
                           fontFamily={element.fontFamily}
                           fontStyle={element.fontStyle}
                           fill={element.color}
-                          width={element.width}
-                          height={element.height}
+                          width={textWidth}
                           rotation={element.rotation}
                           textDecoration={element.textDecoration}
                           draggable={true}
+                          onTransform={() => {
+                              const node = textRef.current;
+                              setTextWidth(node.width() * node.scaleX());
+                              node.scaleX(1);
+                            }}
                           onDragEnd={(e) => {
                             const newElements = [...elements];
                             const elementIndex = newElements.findIndex(el => el.id === element.id);
@@ -360,14 +377,13 @@ const Customization = () => {
                     enabledAnchors={
                       elements[selectedElement].type === 'image' 
                         ? ['top-left', 'top-right', 'bottom-left', 'bottom-right'] // Only corner anchors for images
-                        : ['top-left', 'top-center', 'top-right', 'middle-right', 'middle-left', 'bottom-left', 'bottom-center', 'bottom-right']
+                        : ['middle-right', 'middle-left']
                     }
                     keepRatio={elements[selectedElement].type === 'image'} // Keep ratio for images only
                   />
                 )}
               </Layer>
             </Stage>
-
             {/* Text editor overlay */}
             {isEditing && selectedElement !== null && elements[selectedElement] && elements[selectedElement].type === 'text' && (
               <textarea
@@ -382,6 +398,7 @@ const Customization = () => {
                   left: `${textPosition.x}px`,
                   width: `${textProps.width}px`,
                   height: `${textProps.height}px`,
+                  // height: "fit-content",
                   fontSize: `${textProps.fontSize}px`,
                   fontFamily: textProps.fontFamily,
                   fontStyle: textProps.fontStyle,

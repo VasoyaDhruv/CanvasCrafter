@@ -11,7 +11,7 @@ const SideBar = () => {
   } = useCanvas();
 
   const [Images, setImages] = useState(true);
-  const [searchInput, setSearchInput] = useState(null);
+  const [searchInput, setSearchInput] = useState(undefined);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState("photo");
   const [page, setPage] = useState(1);
@@ -101,8 +101,8 @@ const SideBar = () => {
         id: `image-${Date.now()}`,
         type: 'image',
         src: img.urls.regular,
-        x: 100,
-        y: 100,
+        x: 153,
+        y: 190,
         width: calculatedWidth,
         height: fixedHeight,
         draggable: true,
@@ -111,25 +111,19 @@ const SideBar = () => {
         imageElement: imgObj,
         zIndex: elements.length + 1
       };
-
       setElements((prev) => [...prev, newImage]);
       setSelectedElement(elements.length);
     };
   };
 
-
-
   return (
-    <div className={`flex h-screen bg-gray-900 text-white transition-all duration-300 ${selectedTab === "photo" ? "w-92" : "w-20"} p-0`}>
+    <div className={`flex h-screen bg-gray-900 text-white transition-all duration-300 w-92 p-0`}>
       <div className="space-y-3 mb-5 h-screen border-r-1 border-gray-700">
         <div className="flex flex-col">
           <button
-            onClick={() => {
-              addTextElement();
-              setSelectedTab((prev) => prev === "text" ? null : "text")
-            }}
-             className={`"w-full h-20 flex items-center flex-col gap-1 justify-center py-2 px-4 hover:bg-gray-700 transition-colors cursor-pointer
+            className={`"w-full h-20 flex items-center flex-col gap-1 justify-center py-2 px-4 hover:bg-gray-700 transition-colors cursor-pointer
                       ${selectedTab === "text" ? "bg-gray-700" : "bg-gray-800"}`}
+            onClick={() => setSelectedTab((prev) => prev === "text" ? null : "text")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v18m3-6h6M3 17h12" />
@@ -146,12 +140,16 @@ const SideBar = () => {
             </svg>
             <span className='text-[14px]'>Photo</span>
           </button>
+          {/* <img 
+            src="https://ik.imagekit.io/qak2yjza1/canvas-crafter-logo.png?updatedAt=1747985519933" 
+            alt="Loading..."
+            className="h-12 w-12 object-contain"
+          /> */}
         </div>
       </div>
-
       {
         selectedTab === "photo" && (
-          <div className={`overflow-y-auto flex flex-col p-2 ${selectedTab === "photo" ? "w-92" : "w-20"}`}>
+          <div className={`overflow-y-auto flex flex-col p-2 ${selectedTab === "photo" ? "w-92" : "w-0"}`}>
             <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px]'
               onClick={handleAddImage}
             >Select From Device</button>
@@ -200,6 +198,15 @@ const SideBar = () => {
 
           </div>
         )}
+      {
+        selectedTab === "text" && (
+          <div className={`overflow-y-auto flex flex-col p-2 ${selectedTab === "text" ? "w-92" : "w-90"}`}>
+            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px]'
+              onClick={() => addTextElement()}
+            >Add New Text</button>
+          </div>
+        )
+      }
 
     </div>
 
