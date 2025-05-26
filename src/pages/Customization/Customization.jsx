@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Stage, Layer, Text, Image, Transformer, Group } from 'react-konva';
 
 import './Customization.css';
-import { useCanvas } from '../Context/CanvasContext';
-import SideBar from './SideBar/SideBar';
-import Toolbar from './SideBar/Toolbar';
+import SideBar from '../../components/SideBar/SideBar';
+import Toolbar from '../../components/SideBar/Toolbar';
+import { useCanvas } from '../../Context/CanvasContext';
 
 const Customization = () => {
   const {
