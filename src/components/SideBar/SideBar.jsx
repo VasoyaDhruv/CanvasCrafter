@@ -1,5 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { useCanvas } from '../../Context/CanvasContext';
+import { useNavigate } from 'react-router-dom';
+import CommonModal from '../modal/CommonModal';
 
 
 const SideBar = () => {
@@ -10,11 +12,14 @@ const SideBar = () => {
     setSelectedElement,
   } = useCanvas();
 
+  const [isModalOpen, setModalOpen] = useState(false);
   const [Images, setImages] = useState(true);
   const [searchInput, setSearchInput] = useState(undefined);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTab, setSelectedTab] = useState("photo");
   const [page, setPage] = useState(1);
+
+  const navigate = useNavigate();
 
 
   const handleImageUpload = (event) => {
@@ -116,10 +121,24 @@ const SideBar = () => {
     };
   };
 
+  const handleConfirm = () => {
+    navigate("/")
+    setModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setModalOpen(false);
+  };
+
   return (
     <div className={`flex h-screen bg-gray-900 text-white transition-all duration-300 ${selectedTab ? "w-92" : "w-20"} p-0`}>
       <div className="space-y-3 mb-5 h-screen border-r-1 border-gray-700">
         <div className="flex flex-col">
+          <div>
+            <img
+              onClick={() => setModalOpen(true)}
+              src="https://ik.imagekit.io/qak2yjza1/CanvasCrafter%20(2).png?updatedAt=1748239752290" alt="Logo" className="w-16 h-16 mx-auto p-2 my-2 cursor-pointer" />
+          </div>
           <button
             className={`"w-full h-20 flex items-center flex-col gap-1 justify-center py-2 px-4 hover:bg-gray-700 transition-colors cursor-pointer
                       ${selectedTab === "text" ? "bg-gray-700" : "bg-gray-800"}`}
@@ -140,17 +159,12 @@ const SideBar = () => {
             </svg>
             <span className='text-[14px]'>Photo</span>
           </button>
-          {/* <img 
-            src="https://ik.imagekit.io/qak2yjza1/canvas-crafter-logo.png?updatedAt=1747985519933" 
-            alt="Loading..."
-            className="h-12 w-12 object-contain"
-          /> */}
         </div>
       </div>
       {
         selectedTab === "photo" && (
           <div className={`overflow-y-auto flex flex-col p-2 ${selectedTab === "photo" ? "w-92" : "w-0"}`}>
-            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px] cursor-pointer'
+            <button className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px] cursor-pointer'
               onClick={handleAddImage}
             >Select From Device</button>
             <div className="mb-2">
@@ -201,13 +215,22 @@ const SideBar = () => {
       {
         selectedTab === "text" && (
           <div className={`overflow-y-auto flex flex-col p-2 ${selectedTab === "text" ? "w-92" : "w-90"}`}>
-            <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px] cursor-pointer'
+            <button className='bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mb-2 text-[14px] cursor-pointer'
               onClick={() => addTextElement()}
             >Add New Text</button>
           </div>
         )
       }
 
+      <CommonModal
+        isOpen={isModalOpen}
+        title="Go to Home"
+        message="Do you want to go back to the home page?"
+        onConfirm={handleConfirm}
+        onCancel={handleCancel}
+        confirmText="Yes"
+        cancelText="No"
+      />
     </div>
 
   )
