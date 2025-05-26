@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProductContext } from '../Context/ProductContext';
-import CommonModal from './modal/CommonModal';
+import CommonModal from '../components/modal/CommonModal';
 
 const Dashboard = () => {
   
