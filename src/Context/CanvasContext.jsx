@@ -17,7 +17,6 @@ export const CanvasProvider = ({ children }) => {
   const stageRef = useRef(null);
   const transformerRef = useRef(null);
 
-  // Common function to set background image
   const setBackground = (imageUrl) => {
     if (!imageUrl) {
       setBackgroundImage(null);
@@ -102,7 +101,7 @@ export const CanvasProvider = ({ children }) => {
     transformerRef,
     products,
     product,
-    setBackground // Expose the new function
+    setBackground
   }), [
     elements,
     selectedElement,

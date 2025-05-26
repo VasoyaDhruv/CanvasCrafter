@@ -13,7 +13,7 @@ const Loader = () => {
   return (
     <div className="loader-container">
       <img 
-        src="https://ik.imagekit.io/qak2yjza1/canvas-crafter-logo.png?updatedAt=1747985519933" 
+        src="https://ik.imagekit.io/qak2yjza1/logo_with_name.png?updatedAt=1748239751389" 
         alt="Loading..."
         className="loader-logo"
       />
